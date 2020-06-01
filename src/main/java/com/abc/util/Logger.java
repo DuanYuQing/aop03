@@ -1,14 +1,28 @@
-package util;
+package com.abc.util;
 
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.*;
+import org.springframework.stereotype.Component;
 
 /**
  * 用于记录日志的工具类，抽取了一些与日志相关的方法。
+ * 使用四种通知的执行结果：后置与最终顺序不正常，那是因为spring本身注解的问题，无法更改
+ * 使用环绕通知的执行结果：顺序正常。
  */
+// 将Logger类对象注入IoC容器
+@Component("logger")
+// @Aspect表示当前类是一个切面类
+@Aspect
 public class Logger {
+    // 配置切入点表达式
+    @Pointcut("execution(* com.abc.service.impl.*.*(..))")
+    private void pt1() {
+    }
+
     /**
      * 用于打印日志，计划让其在切入点方法执行之前执行（切入点方法就是业务层方法）。
      */
+    // @Before("pt1()")
     public void beforePrintLog() {
         System.out.println("Logger类中的printLog()方法开始记录日志了...前置通知");
     }
@@ -16,6 +30,7 @@ public class Logger {
     /**
      * 用于打印日志，计划让其在切入点方法执行之后执行（切入点方法就是业务层方法）。
      */
+    // @AfterReturning("pt1()")
     public void afterPrintLog() {
         System.out.println("Logger类中的printLog()方法开始记录日志了...后置通知");
     }
@@ -23,6 +38,7 @@ public class Logger {
     /**
      * 用于打印日志，计划让其在切入点方法catch中执行（切入点方法就是业务层方法）。
      */
+    // @AfterThrowing("pt1()")
     public void throwPrintLog() {
         System.out.println("Logger类中的printLog()方法开始记录日志了...异常通知");
     }
@@ -30,6 +46,7 @@ public class Logger {
     /**
      * 用于打印日志，计划让其在切入点方法final里执行（切入点方法就是业务层方法）。
      */
+    // @After("pt1()")
     public void finalPrintLog() {
         System.out.println("Logger类中的printLog()方法开始记录日志了...最终通知");
     }
@@ -37,6 +54,7 @@ public class Logger {
     /**
      * 用于打印日志，计划让其在切入点环绕执行（切入点方法就是业务层方法）。
      */
+    @Around("pt1()")
     public Object aroundPrintLog(ProceedingJoinPoint proceedingJoinPoint) {
         /*问题：
             当我们配置了环绕通知后，切入点方法没有执行，而通知方法执行了

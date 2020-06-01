@@ -1,7 +1,10 @@
-package service.impl;
+package com.abc.service.impl;
 
-import service.AccountService;
+import org.springframework.stereotype.Service;
+import com.abc.service.AccountService;
 
+// 将AccountService类对象注入IoC容器
+@Service("accountService")
 public class AccountServiceImpl implements AccountService {
     /**
      * 模拟保存账户。

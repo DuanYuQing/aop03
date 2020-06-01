@@ -1,6 +1,6 @@
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import service.AccountService;
+import com.abc.service.AccountService;
 
 /**
  * 测试aop。
